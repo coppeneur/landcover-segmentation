@@ -440,11 +440,11 @@ def training_loop(model, train_loader, val_loader, epochs,
 # Test loop
         
 def segmentation_test_loop(model, test_loader, device = "cpu"):
-    stat_scores = torchmetrics.StatScores(reduce = "macro", num_classes = 7,
-                            mdmc_reduce = "global", task='multiclass').to(device)
+    stat_scores = torchmetrics.StatScores(average = "macro", num_classes = 7,
+                                          multidim_average = "global", task='multiclass').to(device)
     acc = torchmetrics.Accuracy(num_classes = 7, average = "micro",
-                   mdmc_average = "global", task='multiclass').to(device)
-    jaccard = torchmetrics.JaccardIndex(num_classes = 7).to(device)
+                                multidim_average = "global", task='multiclass').to(device)
+    jaccard = torchmetrics.JaccardIndex(num_classes = 7, task="multiclass").to(device)
     
     model.eval()
 
@@ -498,6 +498,7 @@ def class_report(classes, scores, acc, jaccard, class_probs):
     print(f"{10*' '}precision{10*' '}recall{10*' '}f1-score{10*' '}support\n")
     acc = float(acc.cpu())
     jaccard = float(jaccard.cpu())
+    print()
     for i,target in enumerate(classes):
         precision = float((scores[i,0]/(scores[i,0]+scores[i,1])).cpu())
         recall = float((scores[i,0]/(scores[i,0]+scores[i,3])).cpu())

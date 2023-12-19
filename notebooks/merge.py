@@ -201,3 +201,39 @@ def copy_files_with_word(source_dir, destination_dir, keyword):
             # Copy the file to the destination directory
             shutil.copyfile(source_path, destination_path)
             print(f"Copied: {filename} to {newFilename}")
+
+
+def read_metadata(dir):
+    # Set the path to your image directory relative to the project directory
+
+    # Initialize lists to store data
+    image_ids = []
+    sat_image_paths = []
+    mask_paths = []
+
+    # Iterate through files in the directory
+    for filename in os.listdir(dir):
+        # Check if the file is a satellite image (jpg)
+        if filename.endswith(".jpg"):
+            image_id = os.path.splitext(filename)[0]
+            sat_image_path = os.path.join(dir, filename)
+
+            # Check if the corresponding mask (png) exists
+            mask_filename = f"{image_id}_m.png"
+            mask_path = os.path.join(dir, mask_filename)
+
+            if os.path.exists(mask_path):
+                # Append data to lists
+                image_ids.append(image_id)
+                sat_image_paths.append(sat_image_path)
+                mask_paths.append(mask_path)
+
+    # Create a DataFrame
+    data = {
+        'image_id': image_ids,
+        'sat_image_path': sat_image_paths,
+        'mask_path': mask_paths
+    }
+
+    df = pd.DataFrame(data)
+    return df.sample(frac=1).reset_index(drop=True)
