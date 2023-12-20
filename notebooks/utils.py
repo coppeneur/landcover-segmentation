@@ -178,7 +178,6 @@ class SegmentationDataset(Dataset):
                   f"test: {len(test_df['image_id'])} \n"
                   f"val: {len(valid_df['image_id'])} \n"
                   )
-            self.img_names = metadata_df['image_id'].tolist()
             if ratio is not None:
                 print(
                     f"Using the {100 * ratio:.2f}% of the initial {mode} set --> {int(ratio * len(self.img_names))}|{len(self.img_names)}")
