@@ -20,11 +20,11 @@ from pathlib import Path
 
 # OUTPUT_DIR = os.path.join(os.getcwd(), "output")
 OUTPUT_DIR = "../data/hotencode-test"
-IMGS_DIR = "../data/landcover.ai.v1/images"
-MASKS_DIR = "../data/landcover.ai.v1/masks"
-DATA_ROOT = "../data/landcover.ai.v1"
-IMG_PATHS = glob.glob(os.path.join(IMGS_DIR, "*.tif"))
-MASK_PATHS = glob.glob(os.path.join(MASKS_DIR, "*.tif"))
+IMGS_DIR = "../data/hotencode-test"
+MASKS_DIR = "../data/hotencode-test"
+DATA_ROOT = "../data/hotencode-test"
+IMG_PATHS = glob.glob(os.path.join(IMGS_DIR, "*.jpg"))
+MASK_PATHS = glob.glob(os.path.join(MASKS_DIR, "*.png"))
 
 IMAGE_SIZE = 512
 
@@ -567,11 +567,11 @@ def visualize_preds(model, train_set, title, num_samples=4, seed=42,
         ax[i, 0].set_title("True Image")
         ax[i, 0].axis("off")
         ax[i, 1].imshow(y, cmap=labels_cmap, interpolation=None,
-                        vmin=-0.5, vmax=4.5)
+                        vmin=-0.5, vmax=6.5)
         ax[i, 1].set_title("Labels")
         ax[i, 1].axis("off")
         ax[i, 2].imshow(preds, cmap=labels_cmap, interpolation=None,
-                        vmin=-0.5, vmax=4.5)
+                        vmin=-0.5, vmax=6.5)
         ax[i, 2].set_title("Predictions")
         ax[i, 2].axis("off")
     fig.suptitle(title, fontsize=20)
