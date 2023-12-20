@@ -163,37 +163,31 @@ class SegmentationDataset(Dataset):
         self.data_root = DATA_ROOT
 
         if mode in ["train", "test", "val"]:
-            with open(os.path.join(self.data_root, self.mode + ".txt")) as f:
-                self.img_names = f.read().splitlines()
-                print(type(self.img_names))
-
-                metadata_df = ut.read_metadata('../data/hotencode-test')
-                valid_test = metadata_df.sample(frac=0.3, random_state=seed)
-                train_df = metadata_df.drop(valid_test.index)
-                valid_df = valid_test.sample(frac=0.5, random_state=seed)
-                test_df = valid_test.drop(valid_df.index)
-                if mode in ["train"]:
-                    self.img_names = train_df['image_id'].tolist()
-                if mode in ["test"]:
-                    self.img_names = test_df['image_id'].tolist()
-                if mode in ["val"]:
-                    self.img_names = valid_df['image_id'].tolist()
-                print(type(self.img_names))
-                print(f"train: {len(train_df['image_id'])} \n"
-                      f"test: {len(test_df['image_id'])} \n"
-                      f"val: {len(valid_df['image_id'])} \n"
-                      )
-                self.img_names = metadata_df['image_id'].tolist()
-                print(type(self.img_names))
-                if ratio is not None:
-                    print(
-                        f"Using the {100 * ratio:.2f}% of the initial {mode} set --> {int(ratio * len(self.img_names))}|{len(self.img_names)}")
-                    np.random.seed(seed)
-                    self.indices = np.random.randint(low=0, high=len(self.img_names),
-                                                     size=int(ratio * len(self.img_names)))
-                else:
-                    print(f"Using the whole {mode} set --> {len(self.img_names)}")
-                    self.indices = list(range(len(self.img_names)))
+            metadata_df = ut.read_metadata('../data/hotencode-test')
+            valid_test = metadata_df.sample(frac=0.3, random_state=seed)
+            train_df = metadata_df.drop(valid_test.index)
+            valid_df = valid_test.sample(frac=0.5, random_state=seed)
+            test_df = valid_test.drop(valid_df.index)
+            if mode in ["train"]:
+                self.img_names = train_df['image_id'].tolist()
+            if mode in ["test"]:
+                self.img_names = test_df['image_id'].tolist()
+            if mode in ["val"]:
+                self.img_names = valid_df['image_id'].tolist()
+            print(f"train: {len(train_df['image_id'])} \n"
+                  f"test: {len(test_df['image_id'])} \n"
+                  f"val: {len(valid_df['image_id'])} \n"
+                  )
+            self.img_names = metadata_df['image_id'].tolist()
+            if ratio is not None:
+                print(
+                    f"Using the {100 * ratio:.2f}% of the initial {mode} set --> {int(ratio * len(self.img_names))}|{len(self.img_names)}")
+                np.random.seed(seed)
+                self.indices = np.random.randint(low=0, high=len(self.img_names),
+                                                 size=int(ratio * len(self.img_names)))
+            else:
+                print(f"Using the whole {mode} set --> {len(self.img_names)}")
+                self.indices = list(range(len(self.img_names)))
         else:
             raise ValueError(f"mode should be either train, val or test ... not {self.mode}.")
 
