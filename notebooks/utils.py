@@ -1,7 +1,3 @@
-# %% [code]
-# %% [code]
-# %% [code]
-# %% [code]
 import os
 import glob
 import cv2
@@ -9,6 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 import matplotlib.colors
 import seaborn as sns
+import pandas as pd
 
 import torch
 from torch import nn
@@ -466,7 +463,7 @@ def training_loop(model, train_loader, val_loader, epochs,
 # Test loop
 
 def segmentation_test_loop(model, test_loader, device="cpu"):
-    stat_scores = torchmetrics.StatScores(average="macro", num_classes=7,
+    stat_scores = torchmetrics.StatScores(average=None, num_classes=7,
                                           multidim_average="global", task='multiclass').to(device)
     acc = torchmetrics.Accuracy(num_classes=7, average="micro",
                                 multidim_average="global", task='multiclass').to(device)
@@ -522,20 +519,31 @@ class FocalLoss(nn.Module):
 
 
 def class_report(classes, scores, acc, jaccard, class_probs):
-    print(f"{10 * ' '}precision{10 * ' '}recall{10 * ' '}f1-score{10 * ' '}support\n")
+    data = {'Class': classes}
     acc = float(acc.cpu())
     jaccard = float(jaccard.cpu())
-    print()
-    for i, target in enumerate(classes):
-        precision = float((scores[i, 0] / (scores[i, 0] + scores[i, 1])).cpu())
-        recall = float((scores[i, 0] / (scores[i, 0] + scores[i, 3])).cpu())
-        f1 = (2 * precision * recall) / (precision + recall)
-        print(f"{target}{10 * ' '}{precision:.2f}{10 * ' '}{recall:.2f}{10 * ' '}{f1:.2f}{10 * ' '}{scores[i, 4]}")
-    print(f"\n- Total accuracy:{acc:.4f}\n")
-    print(f"- Mean IoU: {jaccard:.4f}\n")
-    print("- Class probs")
+
+    # Calculate precision, recall, and F1 score for each class
+    precision = np.where((scores[:, 0] + scores[:, 1]) > 0, scores[:, 0] / (scores[:, 0] + scores[:, 1]), 0.0)
+    recall = np.where((scores[:, 0] + scores[:, 3]) > 0, scores[:, 0] / (scores[:, 0] + scores[:, 3]), 0.0)
+    f1 = np.where((precision + recall) > 0, 2 * (precision * recall) / (precision + recall), 0.0)
+
+    data['Precision'] = precision
+    data['Recall'] = recall
+    data['F1-Score'] = f1
+    data['Support'] = scores[:, 4]
+
+    # Create a dataframe
+    df = pd.DataFrame(data)
+
+    # Print the dataframe
+    print(df)
+
+    print(f"\n  Total Accuracy: {acc:.4f}\n")
+    print(f"  Mean IoU:         {jaccard:.4f}\n")
+    print("Class Probabilities:")
     for idx in class_probs.keys():
-        print(f"{classes[idx]}:{class_probs[idx].cpu():.3f}")
+        print(f"{classes[idx]:<20}: {class_probs[idx].cpu():.3f}")
 
 
 def visualize_preds(model, train_set, title, num_samples=4, seed=42,
