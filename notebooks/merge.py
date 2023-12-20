@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 # data root
-LANDCOVER_AI_ROOT = '../data/landcover.ai.v1'
+LANDCOVER_AI_ROOT = '../data/landcover.ai.v0'
 DEEPGLOBE_ROOT = '../data/deepglobe'
 MERGED_ROOT = '../data/merge'
 
