@@ -20,9 +20,9 @@ from pathlib import Path
 
 # OUTPUT_DIR = os.path.join(os.getcwd(), "output")
 OUTPUT_DIR = "../data/hotencode-test"
-IMGS_DIR = "../data/landcover.ai.v1/images"
-MASKS_DIR = "../data/landcover.ai.v1/masks"
-DATA_ROOT = "../data/landcover.ai.v1"
+IMGS_DIR = "../data/hotencode-test/images"
+MASKS_DIR = "../data/hotencode-test/masks"
+DATA_ROOT = "../data/hotencode-test"
 IMG_PATHS = glob.glob(os.path.join(IMGS_DIR, "*.tif"))
 MASK_PATHS = glob.glob(os.path.join(MASKS_DIR, "*.tif"))
 
