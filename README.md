@@ -2,7 +2,8 @@
 
 ## Overview
 
-This repository contains the code and resources used for a project on land cover segmentation using deep learning techniques, particularly focusing on satellite imagery./
+This repository contains the code and resources used for a project on land cover segmentation using deep learning techniques, particularly focusing on satellite imagery.
+
 
 ## Project Goals
 
