@@ -89,7 +89,7 @@ def get_data_loaders():
     import notebooks.utils as ut
 
     metadata_df = ut.read_metadata('../data/merge')
-    file_name = '../data/metadata.xlsx'
+    file_name = '../../data/metadata.xlsx'
     metadata_df.to_excel(file_name, index=False, na_rep='N/A', index_label='ID')
     # # Perform 80/20 split for train / val
     # valid_df = metadata_df.sample(frac=0.2, random_state=42)
